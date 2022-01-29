@@ -4,7 +4,7 @@ import time
 from pygame import mixer
 
 pygame.init()
-yazdır = True
+print_value = True
 x, y = 800, 600
 start = False
 Font = pygame.font.SysFont("Times New Roman", 50)
@@ -13,8 +13,8 @@ Font2 = pygame.font.SysFont(None, 25)
 p1win = Font.render("Player1 won", True, (255, 255, 255))
 p2win = Font.render("Player2 won", True, (255, 255, 255))
 icon = pygame.image.load("ufo.png")
-ekran = pygame.display.set_mode((x, y))
-centered = ekran.get_rect(center=(x, y))
+screen = pygame.display.set_mode((x, y))
+centered = screen.get_rect(center=(x, y))
 background = pygame.image.load("space.png")
 pygame.display.set_icon(icon)
 pygame.display.set_caption("Space Invader")
@@ -34,8 +34,8 @@ bullet2x = player2x
 bullet2y = player2y
 bullet2_state = "ready"
 starttext = Font1.render("Start", 1, (0, 0, 0))
-Yazı = Font.render("p1:", True, (255, 255, 255))
-Yazı1 = Font.render("p2:", True, (255, 255, 255))
+text = Font.render("p1:", True, (255, 255, 255))
+text1 = Font.render("p2:", True, (255, 255, 255))
 mixer.music.load("backgroundmusic.wav")
 mixer.music.play(-1)
 lasersound = mixer.Sound("laser.wav")
@@ -48,25 +48,25 @@ player2_shots = 0
 
 
 def player():
-    ekran.blit(player1Img, (player1x, player1y))
+    screen.blit(player1Img, (player1x, player1y))
 
 
 def enemy():
-    ekran.blit(player2Img, (player2x, player2y))
+    screen.blit(player2Img, (player2x, player2y))
 
 
 def fire_bullet(x, y):
     global bullet1_state
 
     bullet1_state = "fire"
-    ekran.blit(bullet, (player1x + 16, bullet1y + 10))
+    screen.blit(bullet, (player1x + 16, bullet1y + 10))
 
 
 def fire_bullet_1(x, y):
     global bullet2_state
 
     bullet2_state = "fire"
-    ekran.blit(bullet1, (player2x + 16, bullet2y + 10))
+    screen.blit(bullet1, (player2x + 16, bullet2y + 10))
 
 
 def isCollision(player2x, player2y, bullet1x, bullet1y):
@@ -98,9 +98,9 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-    ekran.blit(background, (0, 0))
-    ellipse = pygame.draw.ellipse(ekran, (255, 255, 255), (333, 260, 100, 50))
-    ekran.blit(starttext, (350, 270))
+    screen.blit(background, (0, 0))
+    ellipse = pygame.draw.ellipse(screen, (255, 255, 255), (333, 260, 100, 50))
+    screen.blit(starttext, (350, 270))
     if event.type == pygame.MOUSEBUTTONDOWN and ellipse.collidepoint(event.pos):
         start = True
     if start:
@@ -110,7 +110,7 @@ while run:
         if pygame.key.get_pressed()[pygame.K_RIGHT]:
             player1x += 0.5
             bullet1x += 0.5
-        ekran.fill((0, 0, 0))
+        screen.fill((0, 0, 0))
 
         if player1x <= 0:
             player1x = 0
@@ -151,7 +151,7 @@ while run:
         collusion = isCollision(player2x, player2y, bullet1x, bullet1y)
         collusion1 = isCollision1(player1x, player1y, bullet2x, bullet2y)
 
-        ekran.blit(background, (0, 0))
+        screen.blit(background, (0, 0))
         player()
         enemy()
         if bullet1y <= 0:
@@ -176,33 +176,33 @@ while run:
             score += 1
         if score >= 3 or score1 >= 3:
 
-            yazdır = False
+            print_value = False
             mixer.music.stop()
             explosionsound.stop()
             lasersound.stop()
-            ekran.fill((0, 0, 0))
-            pygame.draw.rect(ekran, (255, 255, 255), (390, 350, 100, 50))
-            pygame.draw.rect(ekran, (255, 255, 255), (390, 290, 100, 50))
+            screen.fill((0, 0, 0))
+            pygame.draw.rect(screen, (255, 255, 255), (390, 350, 100, 50))
+            pygame.draw.rect(screen, (255, 255, 255), (390, 290, 100, 50))
             yazı = Font1.render("Leave", 1, (0, 0, 0))
             yazı1 = Font1.render("Play", 1, (0, 0, 0))
-            ekran.blit(yazı, centered)
-            ekran.blit(yazı1, (400, 360))
+            screen.blit(yazı, centered)
+            screen.blit(yazı1, (400, 360))
             winner = Font1.render("Winner", 1, (255, 255, 255))
             loser = Font1.render("Loser", 1, (255, 255, 255))
             if score >= 3:
                 score1 = -999
-                ekran.blit(p1win, (300, 200))
-                ekran.blit(winner, (70, 300))
-                ekran.blit(player1Img, (80, 400))
-                ekran.blit(loser, (640, 300))
-                ekran.blit(reversedplayer2, (650, 400))
+                screen.blit(p1win, (300, 200))
+                screen.blit(winner, (70, 300))
+                screen.blit(player1Img, (80, 400))
+                screen.blit(loser, (640, 300))
+                screen.blit(reversedplayer2, (650, 400))
             elif score1 >= 3:
                 score = -999
-                ekran.blit(p2win, (300, 200))
-                ekran.blit(loser, (70, 300))
-                ekran.blit(player1Img, (80, 400))
-                ekran.blit(winner, (640, 300))
-                ekran.blit(reversedplayer2, (650, 400))
+                screen.blit(p2win, (300, 200))
+                screen.blit(loser, (70, 300))
+                screen.blit(player1Img, (80, 400))
+                screen.blit(winner, (640, 300))
+                screen.blit(reversedplayer2, (650, 400))
 
             player1_infos = Font2.render(
                 f"Wasted bullets: {player1_shots}", 1, (255, 255, 255)
@@ -210,8 +210,8 @@ while run:
             player2_infos = Font2.render(
                 f"Wasted bullets: {player2_shots}", 1, (255, 255, 255)
             )
-            ekran.blit(player1_infos, (60, 120))
-            ekran.blit(player2_infos,(630,120))
+            screen.blit(player1_infos, (60, 120))
+            screen.blit(player2_infos,(630,120))
             if (
                 event.type == pygame.MOUSEBUTTONDOWN
                 and 390 < mouse[0] < 490
@@ -233,22 +233,22 @@ while run:
                 player1y = 480
                 player1_shots=0
                 player2_shots=0
-                yazdır = True
+                print_value = True
 
         if collusion1:
             bullet2y = 50
             bullet2_state = "ready"
             score1 += 1
 
-        if yazdır:
+        if print_value:
             score2 = str(score)
             score3 = str(score1)
             score4 = Font.render(score2, True, (255, 255, 255))
             score5 = Font.render(score3, True, (255, 255, 255))
-            ekran.blit(score4, (750, 50))
-            ekran.blit(score5, (750, 0))
-            ekran.blit(Yazı, (670, 50))
-            ekran.blit(Yazı1, (670, 0))
+            screen.blit(score4, (750, 50))
+            screen.blit(score5, (750, 0))
+            screen.blit(text, (670, 50))
+            screen.blit(text1, (670, 0))
             
 
     pygame.display.update()
