@@ -7,86 +7,98 @@ pygame.init()
 print_value = True
 x, y = 800, 600
 start = False
+
 Font = pygame.font.SysFont("Times New Roman", 50)
 Font1 = pygame.font.SysFont(None, 40)
 Font2 = pygame.font.SysFont(None, 25)
+
 p1win = Font.render("Player1 won", True, (255, 255, 255))
 p2win = Font.render("Player2 won", True, (255, 255, 255))
+
 icon = pygame.image.load("ufo.png")
 screen = pygame.display.set_mode((x, y))
 centered = screen.get_rect(center=(x, y))
 background = pygame.image.load("space.png")
+
 pygame.display.set_icon(icon)
 pygame.display.set_caption("Space Invader")
-player1Img = pygame.image.load("spaceship.png")
-player1x = 370
-player1y = 480
+
+player1_img = pygame.image.load("spaceship.png")
+player1_x = 370
+player1_y = 480
+
 bullet = pygame.image.load("bullet.png")
-bullet1 = pygame.image.load("bulletreversed.png")
-bullet1x = player1x
-bullet1y = player1y
+bullet_reversed = pygame.image.load("bulletreversed.png")
+bullet1_x = player1_x
+bullet1_y = player1_y
 bullet1_state = "ready"
-player2Img = pygame.image.load("battleship.png")
-reversedplayer2 = pygame.image.load("battleshipreversed.png")
-player2x = 370
-player2y = 50
-bullet2x = player2x
-bullet2y = player2y
+
+player2_img = pygame.image.load("battleship.png")
+reversed_player2 = pygame.image.load("battleshipreversed.png")
+player2_x = 370
+player2_y = 50
+
+bullet2_x = player2_x
+bullet2_y = player2_y
 bullet2_state = "ready"
-starttext = Font1.render("Start", 1, (0, 0, 0))
-text = Font.render("p1:", True, (255, 255, 255))
-text1 = Font.render("p2:", True, (255, 255, 255))
+
+start_text = Font1.render("Start", 1, (0, 0, 0))
+
+p1text = Font.render("p1:", True, (255, 255, 255))
+p2text = Font.render("p2:", True, (255, 255, 255))
+
 mixer.music.load("backgroundmusic.wav")
 mixer.music.play(-1)
-lasersound = mixer.Sound("laser.wav")
-explosionsound = mixer.Sound("explosion.wav")
+
+laser_sound = mixer.Sound("laser.wav")
+explosion_sound = mixer.Sound("explosion.wav")
 run = True
-score = 0
-score1 = 0
+score_player_1 = 0
+score_player_2 = 0
 player1_shots = 0
 player2_shots = 0
 
 
 def player():
-    screen.blit(player1Img, (player1x, player1y))
+    screen.blit(player1_img, (player1_x, player1_y))
 
 
 def enemy():
-    screen.blit(player2Img, (player2x, player2y))
+    screen.blit(player2_img, (player2_x, player2_y))
 
 
 def fire_bullet(x, y):
     global bullet1_state
 
     bullet1_state = "fire"
-    screen.blit(bullet, (player1x + 16, bullet1y + 10))
+    screen.blit(bullet, (player1_x + 16, bullet1_y + 10))
 
 
 def fire_bullet_1(x, y):
     global bullet2_state
 
     bullet2_state = "fire"
-    screen.blit(bullet1, (player2x + 16, bullet2y + 10))
+    screen.blit(bullet_reversed, (player2_x + 16, bullet2_y + 10))
 
 
-def isCollision(player2x, player2y, bullet1x, bullet1y):
-    distance = (math.sqrt(math.pow(player2x - bullet1x, 2))) + (
-        math.pow(player2y - bullet1y, 2)
+def isCollisionPlayer2(player2_x, player2_y, bullet1_x, bullet1_y):
+    distance = (math.sqrt(math.pow(player2_x - bullet1_x, 2))) + (
+        math.pow(player2_y - bullet1_y, 2)
     )
     if distance < 27:
-        explosionsound.play()
+        explosion_sound.play()
         return True
 
     else:
         return False
 
 
-def isCollision1(player1x, player1y, bullet2x, bullet2y):
-    distance1 = (math.sqrt(math.pow(player1x - bullet2x, 2))) + (
-        math.pow(player1y - bullet2y, 2)
+def isCollisionPlayer1(player1_x, player1_y, bullet2_x, bullet2_y):
+    distance1 = (math.sqrt(math.pow(player1_x - bullet2_x, 2))) + (
+        math.pow(player1_y - bullet2_y, 2)
     )
     if distance1 < 27:
-        explosionsound.play()
+        explosion_sound.play()
         return True
 
     else:
@@ -98,120 +110,133 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+
     screen.blit(background, (0, 0))
     ellipse = pygame.draw.ellipse(screen, (255, 255, 255), (333, 260, 100, 50))
-    screen.blit(starttext, (350, 270))
+    screen.blit(start_text, (350, 270))
+
     if event.type == pygame.MOUSEBUTTONDOWN and ellipse.collidepoint(event.pos):
         start = True
+
     if start:
         if pygame.key.get_pressed()[pygame.K_LEFT]:
-            player1x -= 0.5
-            bullet1x -= 0.5
+            player1_x -= 0.5
+            bullet1_x -= 0.5
         if pygame.key.get_pressed()[pygame.K_RIGHT]:
-            player1x += 0.5
-            bullet1x += 0.5
+            player1_x += 0.5
+            bullet1_x += 0.5
+
         screen.fill((0, 0, 0))
 
-        if player1x <= 0:
-            player1x = 0
-        elif player1x >= 736:
-            player1x = 736
-        if player1y <= 0:
-            player1y = 0
-        elif player1y >= 536:
-            player1y = 536
-        if pygame.key.get_pressed()[pygame.K_a]:
-            player2x -= 0.5
-            bullet2x -= 0.5
-        if pygame.key.get_pressed()[pygame.K_d]:
-            player2x += 0.5
-            bullet2x += 0.5
+        if player1_x <= 0:
+            player1_x = 0
+        elif player1_x >= 736:
+            player1_x = 736
+        if player1_y <= 0:
+            player1_y = 0
+        elif player1_y >= 536:
+            player1_y = 536
 
-        if player2x <= 0:
-            player2x = 0
-        elif player2x >= 736:
-            player2x = 736
-        if player2y <= 0:
-            player2y = 0
-        elif player2y >= 536:
-            player2y = 536
+        if pygame.key.get_pressed()[pygame.K_a]:
+            player2_x -= 0.5
+            bullet2_x -= 0.5
+        if pygame.key.get_pressed()[pygame.K_d]:
+            player2_x += 0.5
+            bullet2_x += 0.5
+
+        if player2_x <= 0:
+            player2_x = 0
+        elif player2_x >= 736:
+            player2_x = 736
+        if player2_y <= 0:
+            player2_y = 0
+        elif player2_y >= 536:
+            player2_y = 536
+
         if pygame.key.get_pressed()[pygame.K_UP]:
             if bullet1_state == "ready":
-                bullet1x = player1x
-                lasersound.play()
-                fire_bullet(bullet1x, bullet1y)
-         
+                bullet1_x = player1_x
+                laser_sound.play()
+                fire_bullet(bullet1_x, bullet1_y)
                 player1_shots += 1
+
         if pygame.key.get_pressed()[pygame.K_w]:
             if bullet2_state == "ready":
-                bullet2x = player2x
-                lasersound.play()
-                fire_bullet_1(bullet2x, bullet2y)
+                bullet2_x = player2_x
+                laser_sound.play()
+                fire_bullet_1(bullet2_x, bullet2_y)
                 player2_shots += 1
-        collusion = isCollision(player2x, player2y, bullet1x, bullet1y)
-        collusion1 = isCollision1(player1x, player1y, bullet2x, bullet2y)
+
+        collusion_player_2 = isCollisionPlayer2(player2_x, player2_y, bullet1_x, bullet1_y)
+        collusion_player_1 = isCollisionPlayer1(player1_x, player1_y, bullet2_x, bullet2_y)
 
         screen.blit(background, (0, 0))
         player()
         enemy()
-        if bullet1y <= 0:
 
-            bullet1y = 480
+        if bullet1_y <= 0:
+            bullet1_y = 480
             bullet1_state = "ready"
+
         if bullet1_state == "fire":
+            fire_bullet(player1_x, bullet1_y)
+            bullet1_y -= 1
 
-            fire_bullet(player1x, bullet1y)
-            bullet1y -= 1
-        if bullet2y >= 600:
-
-            bullet2y = 50
+        if bullet2_y >= 600:
+            bullet2_y = 50
             bullet2_state = "ready"
+
         if bullet2_state == "fire":
+            fire_bullet_1(player2_x, bullet2_y)
+            bullet2_y += 1
 
-            fire_bullet_1(player2x, bullet2y)
-            bullet2y += 1
-        if collusion:
-            bullet1y = 480
+        if collusion_player_2:
+            bullet1_y = 480
             bullet1_state = "ready"
-            score += 1
-        if score >= 3 or score1 >= 3:
+            score_player_1 += 1
 
+        if score_player_1 >= 3 or score_player_2 >= 3:
             print_value = False
             mixer.music.stop()
-            explosionsound.stop()
-            lasersound.stop()
+            explosion_sound.stop()
+            laser_sound.stop()
             screen.fill((0, 0, 0))
             pygame.draw.rect(screen, (255, 255, 255), (390, 350, 100, 50))
             pygame.draw.rect(screen, (255, 255, 255), (390, 290, 100, 50))
-            yazı = Font1.render("Leave", 1, (0, 0, 0))
-            yazı1 = Font1.render("Play", 1, (0, 0, 0))
-            screen.blit(yazı, centered)
-            screen.blit(yazı1, (400, 360))
+            leave_text = Font1.render("Leave", 1, (0, 0, 0))
+            play_text = Font1.render("Play", 1, (0, 0, 0))
+            screen.blit(leave_text, centered)
+            screen.blit(play_text, (400, 360))
             winner = Font1.render("Winner", 1, (255, 255, 255))
             loser = Font1.render("Loser", 1, (255, 255, 255))
-            if score >= 3:
-                score1 = -999
+
+            if score_player_1 >= 3:
+                score_player_2 = -999
                 screen.blit(p1win, (300, 200))
                 screen.blit(winner, (70, 300))
-                screen.blit(player1Img, (80, 400))
+                screen.blit(player1_img, (80, 400))
                 screen.blit(loser, (640, 300))
-                screen.blit(reversedplayer2, (650, 400))
-            elif score1 >= 3:
-                score = -999
+                screen.blit(reversed_player2, (650, 400))
+
+            elif score_player_2 >= 3:
+                score_player_1 = -999
                 screen.blit(p2win, (300, 200))
                 screen.blit(loser, (70, 300))
-                screen.blit(player1Img, (80, 400))
+                screen.blit(player1_img, (80, 400))
                 screen.blit(winner, (640, 300))
-                screen.blit(reversedplayer2, (650, 400))
+                screen.blit(reversed_player2, (650, 400))
 
             player1_infos = Font2.render(
                 f"Wasted bullets: {player1_shots}", 1, (255, 255, 255)
             )
+
             player2_infos = Font2.render(
                 f"Wasted bullets: {player2_shots}", 1, (255, 255, 255)
             )
+
             screen.blit(player1_infos, (60, 120))
             screen.blit(player2_infos,(630,120))
+
             if (
                 event.type == pygame.MOUSEBUTTONDOWN
                 and 390 < mouse[0] < 490
@@ -219,38 +244,36 @@ while run:
             ):
                 pygame.quit()
                 quit()
+
             if (
                 event.type == pygame.MOUSEBUTTONDOWN
                 and 390 < mouse[0] < 490
                 and 350 < mouse[1] < 400
             ):
                 mixer.music.play(-1)
-                score = 0
-                score1 = 0
-                player2x = 370
-                player2y = 50
-                player1x = 370
-                player1y = 480
+                score_player_1 = 0
+                score_player_2 = 0
+                player2_x = 370
+                player2_y = 50
+                player1_x = 370
+                player1_y = 480
                 player1_shots=0
                 player2_shots=0
                 print_value = True
 
-        if collusion1:
-            bullet2y = 50
+        if collusion_player_1:
+            bullet2_y = 50
             bullet2_state = "ready"
-            score1 += 1
+            score_player_2 += 1
 
         if print_value:
-            score2 = str(score)
-            score3 = str(score1)
-            score4 = Font.render(score2, True, (255, 255, 255))
-            score5 = Font.render(score3, True, (255, 255, 255))
-            screen.blit(score4, (750, 50))
-            screen.blit(score5, (750, 0))
-            screen.blit(text, (670, 50))
-            screen.blit(text1, (670, 0))
+            p1scorestr = Font.render(str(score_player_1), True, (255, 255, 255))
+            p2scorestr = Font.render(str(score_player_2), True, (255, 255, 255))
+            screen.blit(p1scorestr, (750, 50))
+            screen.blit(p2scorestr, (750, 0))
+            screen.blit(p1text, (670, 50))
+            screen.blit(p2text, (670, 0))
             
-
     pygame.display.update()
 
 pygame.quit()
